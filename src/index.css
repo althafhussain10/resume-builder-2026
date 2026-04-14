@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=Epilogue:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 13% 95%;
+    --foreground: 220 26% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 26% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 26% 14%;
+
+    --primary: 215 19% 35%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 216 12% 84%;
+    --secondary-foreground: 220 26% 14%;
+
+    --muted: 220 14% 92%;
+    --muted-foreground: 215 14% 45%;
+
+    --accent: 215 19% 35%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 216 12% 84%;
+    --input: 216 12% 84%;
+    --ring: 215 19% 35%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 220 26% 14%;
+    --sidebar-foreground: 216 12% 84%;
+    --sidebar-primary: 215 25% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 20%;
+    --sidebar-accent-foreground: 216 12% 84%;
+    --sidebar-border: 220 20% 22%;
+    --sidebar-ring: 215 25% 65%;
+
+    --font-heading: 'Urbanist', sans-serif;
+    --font-body: 'Epilogue', sans-serif;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
