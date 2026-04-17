@@ -6,11 +6,13 @@ import ResumePreview from "@/components/ResumePreview";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Eye, Layout } from "lucide-react";
+import SaveLoadMenu from "@/components/SaveLoadMenu";
 
 const MobileLayout = () => (
   <div className="min-h-screen flex flex-col">
     <header className="h-12 flex items-center border-b bg-card px-4">
       <h1 className="font-heading font-bold text-lg">Resume Builder</h1>
+      <SaveLoadMenu />
     </header>
     <Tabs defaultValue="form" className="flex-1 flex flex-col">
       <TabsList className="w-full rounded-none border-b bg-card h-10 shrink-0">
