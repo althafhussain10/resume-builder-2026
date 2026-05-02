@@ -58,11 +58,29 @@ const ResumeForm = () => {
     setData(prev => ({ ...prev, languages: value.split(",").map(s => s.trim()).filter(Boolean) }));
   };
 
+  const addCertification = () => {
+    setData(prev => ({
+      ...prev,
+      certifications: [...(prev.certifications || []), { id: Date.now().toString(), name: "", issuer: "", date: "" }],
+    }));
+  };
+
+  const updateCertification = (id: string, field: string, value: string) => {
+    setData(prev => ({
+      ...prev,
+      certifications: (prev.certifications || []).map(c => c.id === id ? { ...c, [field]: value } : c),
+    }));
+  };
+
+  const removeCertification = (id: string) => {
+    setData(prev => ({ ...prev, certifications: (prev.certifications || []).filter(c => c.id !== id) }));
+  };
+
   return (
     <div className="space-y-4 p-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
       <h2 className="font-heading text-xl font-bold text-foreground">Resume Details</h2>
 
-      <Accordion type="multiple" defaultValue={["personal", "experience", "education", "skills"]} className="space-y-2">
+      <Accordion type="multiple" defaultValue={["personal", "experience", "education", "skills", "certifications"]} className="space-y-2">
         <AccordionItem value="personal" className="border rounded-lg bg-card px-4">
           <AccordionTrigger className="font-heading font-semibold text-sm">Personal Information</AccordionTrigger>
           <AccordionContent className="space-y-3 pb-4">
@@ -128,6 +146,25 @@ const ResumeForm = () => {
           <AccordionContent className="space-y-3 pb-4">
             <div><Label className="text-xs">Skills (comma-separated)</Label><Textarea value={data.skills.join(", ")} onChange={e => updateSkills(e.target.value)} rows={2} /></div>
             <div><Label className="text-xs">Languages (comma-separated)</Label><Input value={(data.languages || []).join(", ")} onChange={e => updateLanguages(e.target.value)} /></div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="certifications" className="border rounded-lg bg-card px-4">
+          <AccordionTrigger className="font-heading font-semibold text-sm">Certifications</AccordionTrigger>
+          <AccordionContent className="space-y-3 pb-4">
+            {(data.certifications || []).map(cert => (
+              <Card key={cert.id} className="relative">
+                <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-destructive" onClick={() => removeCertification(cert.id)}><Trash2 className="h-3 w-3" /></Button>
+                <CardContent className="pt-4 space-y-2">
+                  <div><Label className="text-xs">Certification Name</Label><Input value={cert.name} onChange={e => updateCertification(cert.id, "name", e.target.value)} /></div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div><Label className="text-xs">Issuer</Label><Input value={cert.issuer} onChange={e => updateCertification(cert.id, "issuer", e.target.value)} /></div>
+                    <div><Label className="text-xs">Date</Label><Input value={cert.date} onChange={e => updateCertification(cert.id, "date", e.target.value)} /></div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            <Button variant="outline" size="sm" onClick={addCertification} className="w-full"><Plus className="h-3 w-3 mr-1" />Add Certification</Button>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

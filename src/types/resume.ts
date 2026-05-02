@@ -27,6 +27,12 @@ export interface ResumeData {
   }[];
   skills: string[];
   languages?: string[];
+  certifications?: {
+    id: string;
+    name: string;
+    issuer: string;
+    date: string;
+  }[];
 }
 
 export const defaultResumeData: ResumeData = {
@@ -70,4 +76,7 @@ export const defaultResumeData: ResumeData = {
   ],
   skills: ["React", "TypeScript", "Node.js", "Python", "AWS", "Docker", "GraphQL", "PostgreSQL"],
   languages: ["English", "Spanish"],
+  certifications: [
+    { id: "1", name: "AWS Certified Solutions Architect", issuer: "Amazon Web Services", date: "2023" },
+  ],
 };
