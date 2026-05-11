@@ -143,7 +143,11 @@ const ResumeForm = () => {
                           <div><Label className="text-xs">Start Date</Label><Input value={exp.startDate} onChange={e => updateExperience(exp.id, "startDate", e.target.value)} /></div>
                           <div><Label className="text-xs">End Date</Label><Input value={exp.endDate} onChange={e => updateExperience(exp.id, "endDate", e.target.value)} /></div>
                         </div>
-                        <div><Label className="text-xs">Description</Label><Textarea value={exp.description} onChange={e => updateExperience(exp.id, "description", e.target.value)} rows={2} /></div>
+                        <div>
+                          <Label className="text-xs">Description</Label>
+                          <Textarea value={exp.description} onChange={e => updateExperience(exp.id, "description", e.target.value)} rows={3} placeholder="Write a paragraph, or start lines with '-' to render as bullet points." />
+                          <p className="text-[10px] text-muted-foreground mt-1">Tip: Start each line with "-" to display as a bullet list.</p>
+                        </div>
                       </CardContent>
                     </Card>
                   </SortableItem>
