@@ -141,28 +141,30 @@ const SaveLoadMenu = () => {
         <DropdownMenuContent align="end" className="w-64 bg-popover">
           <DropdownMenuLabel>Saved Resumes</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {entries.length === 0 ? (
-            <div className="px-2 py-3 text-xs text-muted-foreground text-center">No saved resumes yet</div>
-          ) : (
-            entries.map((item) => (
-              <DropdownMenuItem
-                key={item.name}
-                onClick={() => handleLoad(item.name)}
-                className="flex items-center justify-between gap-2 cursor-pointer"
-              >
-                <div className="flex flex-col min-w-0">
-                  <span className="truncate text-sm">{item.name}</span>
-                  <span className="text-[10px] text-muted-foreground">
-                    {new Date(item.savedAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <Trash2
-                  className="h-3.5 w-3.5 text-destructive shrink-0 hover:opacity-70"
-                  onClick={(e) => handleDelete(item.name, e)}
-                />
-              </DropdownMenuItem>
-            ))
-          )}
+          <div className="max-h-64 overflow-y-auto">
+            {entries.length === 0 ? (
+              <div className="px-2 py-3 text-xs text-muted-foreground text-center">No saved resumes yet</div>
+            ) : (
+              entries.map((item) => (
+                <DropdownMenuItem
+                  key={item.name}
+                  onClick={() => handleLoad(item.name)}
+                  className="flex items-center justify-between gap-2 cursor-pointer"
+                >
+                  <div className="flex flex-col min-w-0">
+                    <span className="truncate text-sm">{item.name}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {new Date(item.savedAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <Trash2
+                    className="h-3.5 w-3.5 text-destructive shrink-0 hover:opacity-70"
+                    onClick={(e) => handleDelete(item.name, e)}
+                  />
+                </DropdownMenuItem>
+              ))
+            )}
+          </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleExportJson} className="cursor-pointer">
             <Download className="h-3.5 w-3.5 mr-2" />Export as JSON

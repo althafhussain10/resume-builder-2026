@@ -4,6 +4,21 @@ interface Props {
   data: ResumeData;
 }
 
+// Renders summary text. Lines starting with "-", "*", or "•" become bullet items.
+const SummaryText = ({ text, className = "", listClassName = "list-disc pl-5 space-y-0.5" }: { text: string; className?: string; listClassName?: string }) => {
+  const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+  const isBullet = (l: string) => /^[-*•]\s*/.test(l);
+  if (lines.some(isBullet)) {
+    const items = lines.map(l => l.replace(/^[-*•]\s*/, ""));
+    return (
+      <ul className={`${listClassName} ${className}`}>
+        {items.map((it, i) => <li key={i}>{it}</li>)}
+      </ul>
+    );
+  }
+  return <p className={className}>{text}</p>;
+};
+
 // Template 1: Classic
 export const ClassicTemplate = ({ data }: Props) => (
   <div className="p-8 font-serif text-[11px] leading-relaxed" style={{ fontFamily: "Georgia, serif" }}>
@@ -12,7 +27,7 @@ export const ClassicTemplate = ({ data }: Props) => (
       <p className="text-sm text-gray-600 mt-1">{data.personalInfo.title}</p>
       <p className="text-[10px] text-gray-500 mt-1">{data.personalInfo.email} | {data.personalInfo.phone} | {data.personalInfo.location}</p>
     </div>
-    {data.personalInfo.summary && <div className="mb-4"><h2 className="text-xs font-bold uppercase tracking-wider border-b border-gray-300 pb-1 mb-2">Summary</h2><p>{data.personalInfo.summary}</p></div>}
+    {data.personalInfo.summary && <div className="mb-4"><h2 className="text-xs font-bold uppercase tracking-wider border-b border-gray-300 pb-1 mb-2">Summary</h2><SummaryText text={data.personalInfo.summary} /></div>}
     <div className="mb-4"><h2 className="text-xs font-bold uppercase tracking-wider border-b border-gray-300 pb-1 mb-2">Experience</h2>{data.experience.map(e => (<div key={e.id} className="mb-3"><div className="flex justify-between"><span className="font-bold">{e.position}</span><span className="text-gray-500">{e.startDate} - {e.endDate}</span></div><p className="italic text-gray-600">{e.company}</p><p className="mt-1">{e.description}</p></div>))}</div>
     <div className="mb-4"><h2 className="text-xs font-bold uppercase tracking-wider border-b border-gray-300 pb-1 mb-2">Education</h2>{data.education.map(e => (<div key={e.id} className="mb-2"><div className="flex justify-between"><span className="font-bold">{e.institution}</span><span className="text-gray-500">{e.startDate} - {e.endDate}</span></div><p>{e.degree} in {e.field}</p></div>))}</div>
     <div><h2 className="text-xs font-bold uppercase tracking-wider border-b border-gray-300 pb-1 mb-2">Skills</h2><p>{data.skills.join(" • ")}</p></div>
@@ -38,7 +53,7 @@ export const ModernTemplate = ({ data }: Props) => (
       {data.languages?.length ? <><h3 className="text-xs font-bold uppercase tracking-wider mb-2 border-b border-blue-400 pb-1">Languages</h3><p className="text-[10px]">{data.languages.join(", ")}</p></> : null}
     </div>
     <div className="w-2/3 p-6">
-      {data.personalInfo.summary && <div className="mb-4"><h2 className="text-xs font-bold uppercase text-blue-600 mb-2">Profile</h2><p className="text-gray-600">{data.personalInfo.summary}</p></div>}
+      {data.personalInfo.summary && <div className="mb-4"><h2 className="text-xs font-bold uppercase text-blue-600 mb-2">Profile</h2><SummaryText text={data.personalInfo.summary} className="text-gray-600" /></div>}
       <div className="mb-4"><h2 className="text-xs font-bold uppercase text-blue-600 mb-2">Experience</h2>{data.experience.map(e => (<div key={e.id} className="mb-3 pl-3 border-l-2 border-blue-200"><p className="font-bold">{e.position}</p><p className="text-blue-600 text-[10px]">{e.company} | {e.startDate} - {e.endDate}</p><p className="mt-1 text-gray-600">{e.description}</p></div>))}</div>
       <div className="mb-4"><h2 className="text-xs font-bold uppercase text-blue-600 mb-2">Education</h2>{data.education.map(e => (<div key={e.id} className="mb-2"><p className="font-bold">{e.institution}</p><p className="text-gray-600">{e.degree} in {e.field} | {e.startDate} - {e.endDate}</p></div>))}</div>
       {data.certifications?.length ? <div><h2 className="text-xs font-bold uppercase text-blue-600 mb-2">Certifications</h2>{data.certifications.map(c => (<div key={c.id} className="mb-1"><p className="font-bold">{c.name}</p><p className="text-gray-600 text-[10px]">{c.issuer} • {c.date}</p></div>))}</div> : null}
@@ -54,7 +69,7 @@ export const MinimalTemplate = ({ data }: Props) => (
     <div className="flex gap-4 text-[10px] text-gray-400 mb-6">
       <span>{data.personalInfo.email}</span><span>{data.personalInfo.phone}</span><span>{data.personalInfo.location}</span>
     </div>
-    {data.personalInfo.summary && <p className="text-gray-600 mb-6 leading-relaxed">{data.personalInfo.summary}</p>}
+    {data.personalInfo.summary && <SummaryText text={data.personalInfo.summary} className="text-gray-600 mb-6 leading-relaxed" />}
     <div className="mb-6">{data.experience.map(e => (<div key={e.id} className="mb-4 grid grid-cols-[120px_1fr] gap-4"><div className="text-[10px] text-gray-400">{e.startDate} —<br/>{e.endDate}</div><div><p className="font-medium">{e.position}</p><p className="text-gray-400 text-[10px]">{e.company}</p><p className="mt-1 text-gray-600">{e.description}</p></div></div>))}</div>
     <div className="mb-6">{data.education.map(e => (<div key={e.id} className="grid grid-cols-[120px_1fr] gap-4 mb-2"><div className="text-[10px] text-gray-400">{e.startDate} — {e.endDate}</div><div><p className="font-medium">{e.institution}</p><p className="text-gray-500">{e.degree}, {e.field}</p></div></div>))}</div>
     <div className="flex flex-wrap gap-2">{data.skills.map(s => <span key={s} className="text-[10px] text-gray-500 border border-gray-200 px-2 py-0.5 rounded-full">{s}</span>)}</div>
@@ -73,7 +88,7 @@ export const CreativeTemplate = ({ data }: Props) => (
       </div>
     </div>
     <div className="p-8">
-      {data.personalInfo.summary && <div className="bg-orange-50 p-4 rounded-lg mb-6 border-l-4 border-orange-500"><p className="text-gray-700">{data.personalInfo.summary}</p></div>}
+      {data.personalInfo.summary && <div className="bg-orange-50 p-4 rounded-lg mb-6 border-l-4 border-orange-500"><SummaryText text={data.personalInfo.summary} className="text-gray-700" /></div>}
       <div className="grid grid-cols-[1fr_200px] gap-8">
         <div>
           <h2 className="text-sm font-bold text-orange-600 mb-3">💼 Experience</h2>
@@ -103,7 +118,7 @@ export const ProfessionalTemplate = ({ data }: Props) => (
         {data.personalInfo.linkedin && <span>{data.personalInfo.linkedin}</span>}
       </div>
     </div>
-    {data.personalInfo.summary && <div className="mb-6 bg-blue-50 p-4 rounded"><p>{data.personalInfo.summary}</p></div>}
+    {data.personalInfo.summary && <div className="mb-6 bg-blue-50 p-4 rounded"><SummaryText text={data.personalInfo.summary} /></div>}
     <div className="mb-6"><h2 className="text-sm font-bold text-blue-900 uppercase tracking-wide mb-3 flex items-center gap-2"><span className="w-6 h-0.5 bg-blue-900"></span>Professional Experience</h2>{data.experience.map(e => (<div key={e.id} className="mb-4"><div className="flex justify-between items-baseline"><span className="font-bold text-blue-900">{e.position}</span><span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{e.startDate} - {e.endDate}</span></div><p className="text-blue-600 text-[10px]">{e.company}</p><p className="mt-1 text-gray-600">{e.description}</p></div>))}</div>
     <div className="grid grid-cols-2 gap-8">
       <div><h2 className="text-sm font-bold text-blue-900 uppercase tracking-wide mb-3 flex items-center gap-2"><span className="w-6 h-0.5 bg-blue-900"></span>Education</h2>{data.education.map(e => (<div key={e.id} className="mb-2"><p className="font-bold">{e.institution}</p><p className="text-gray-500">{e.degree} in {e.field}</p><p className="text-[10px] text-gray-400">{e.startDate} - {e.endDate}</p></div>))}</div>
@@ -122,7 +137,7 @@ export const ElegantTemplate = ({ data }: Props) => (
       <p className="text-rose-600 tracking-wider uppercase text-xs">{data.personalInfo.title}</p>
       <p className="text-[10px] text-gray-400 mt-2">{data.personalInfo.email} • {data.personalInfo.phone} • {data.personalInfo.location}</p>
     </div>
-    {data.personalInfo.summary && <p className="text-center text-gray-500 italic mb-8 max-w-md mx-auto">{data.personalInfo.summary}</p>}
+    {data.personalInfo.summary && <SummaryText text={data.personalInfo.summary} className="text-center text-gray-500 italic mb-8 max-w-md mx-auto" listClassName="list-disc pl-5 space-y-0.5 text-left inline-block" />}
     <div className="mb-6"><h2 className="text-center text-xs uppercase tracking-[0.3em] text-rose-600 mb-4">Experience</h2>{data.experience.map(e => (<div key={e.id} className="mb-4 text-center"><p className="font-semibold text-gray-800">{e.position}</p><p className="text-rose-500 text-[10px]">{e.company}</p><p className="text-[10px] text-gray-400">{e.startDate} — {e.endDate}</p><p className="mt-1 text-gray-600 max-w-md mx-auto">{e.description}</p></div>))}</div>
     <div className="mb-6"><h2 className="text-center text-xs uppercase tracking-[0.3em] text-rose-600 mb-4">Education</h2>{data.education.map(e => (<div key={e.id} className="text-center mb-2"><p className="font-semibold">{e.institution}</p><p className="text-gray-500">{e.degree} in {e.field} ({e.startDate}–{e.endDate})</p></div>))}</div>
     <div className="text-center"><h2 className="text-xs uppercase tracking-[0.3em] text-rose-600 mb-3">Skills</h2><p className="text-gray-600">{data.skills.join(" · ")}</p></div>
@@ -141,7 +156,7 @@ export const BoldTemplate = ({ data }: Props) => (
       </div>
     </div>
     <div className="p-8">
-      {data.personalInfo.summary && <p className="text-gray-600 mb-6 border-l-4 border-yellow-400 pl-4" style={{ fontFamily: "Arial, sans-serif" }}>{data.personalInfo.summary}</p>}
+      {data.personalInfo.summary && <div className="text-gray-600 mb-6 border-l-4 border-yellow-400 pl-4" style={{ fontFamily: "Arial, sans-serif" }}><SummaryText text={data.personalInfo.summary} /></div>}
       <div className="mb-6"><h2 className="text-lg font-black uppercase mb-3">Experience</h2>{data.experience.map(e => (<div key={e.id} className="mb-4"><div className="bg-gray-100 p-3 rounded"><p className="font-black uppercase">{e.position}</p><p className="text-yellow-600 text-[10px] font-bold">{e.company} | {e.startDate} - {e.endDate}</p></div><p className="mt-2 text-gray-600 pl-3" style={{ fontFamily: "Arial, sans-serif" }}>{e.description}</p></div>))}</div>
       <div className="grid grid-cols-2 gap-6">
         <div><h2 className="text-lg font-black uppercase mb-3">Education</h2>{data.education.map(e => (<div key={e.id} className="mb-2"><p className="font-bold">{e.institution}</p><p className="text-gray-500 text-[10px]" style={{ fontFamily: "Arial, sans-serif" }}>{e.degree} in {e.field}</p></div>))}</div>
@@ -165,7 +180,7 @@ export const TechTemplate = ({ data }: Props) => (
           <span>{data.personalInfo.location}</span>
         </div>
       </div>
-      {data.personalInfo.summary && <div className="mb-6 bg-slate-800 p-4 rounded-lg border border-slate-700"><p className="text-slate-300">{data.personalInfo.summary}</p></div>}
+      {data.personalInfo.summary && <div className="mb-6 bg-slate-800 p-4 rounded-lg border border-slate-700"><SummaryText text={data.personalInfo.summary} className="text-slate-300" /></div>}
       <div className="mb-6"><h2 className="text-indigo-400 font-bold mb-3">{"## "}Experience</h2>{data.experience.map(e => (<div key={e.id} className="mb-4 pl-4 border-l border-indigo-500/30"><p className="text-white font-bold">{e.position}</p><p className="text-green-400 text-[10px]">{e.company} <span className="text-slate-500">({e.startDate} - {e.endDate})</span></p><p className="mt-1 text-slate-400">{e.description}</p></div>))}</div>
       <div className="grid grid-cols-2 gap-6">
         <div><h2 className="text-indigo-400 font-bold mb-3">{"## "}Education</h2>{data.education.map(e => (<div key={e.id} className="mb-2"><p className="text-white">{e.institution}</p><p className="text-slate-400 text-[10px]">{e.degree} in {e.field}</p></div>))}</div>
@@ -183,7 +198,7 @@ export const ExecutiveTemplate = ({ data }: Props) => (
       <div><h1 className="text-2xl font-bold text-emerald-900">{data.personalInfo.fullName}</h1><p className="text-emerald-700 mt-1">{data.personalInfo.title}</p></div>
       <div className="text-right text-[10px] text-gray-500"><p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p>{data.personalInfo.location}</p></div>
     </div>
-    {data.personalInfo.summary && <div className="mb-6 italic text-gray-600 border-l-4 border-emerald-200 pl-4">{data.personalInfo.summary}</div>}
+    {data.personalInfo.summary && <div className="mb-6 italic text-gray-600 border-l-4 border-emerald-200 pl-4"><SummaryText text={data.personalInfo.summary} /></div>}
     <div className="mb-6"><h2 className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-3 py-1.5 rounded mb-3">Career History</h2>{data.experience.map(e => (<div key={e.id} className="mb-4"><div className="flex justify-between"><span className="font-bold text-emerald-900">{e.position} — {e.company}</span><span className="text-[10px] text-emerald-600">{e.startDate} – {e.endDate}</span></div><p className="mt-1 text-gray-600">{e.description}</p></div>))}</div>
     <div className="grid grid-cols-2 gap-8">
       <div><h2 className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-3 py-1.5 rounded mb-3">Education</h2>{data.education.map(e => (<div key={e.id} className="mb-2"><p className="font-bold">{e.institution}</p><p className="text-gray-500">{e.degree}, {e.field} ({e.startDate}–{e.endDate})</p></div>))}</div>
@@ -200,7 +215,7 @@ export const CompactTemplate = ({ data }: Props) => (
       <div><h1 className="text-lg font-bold">{data.personalInfo.fullName}</h1><p className="text-red-200 text-[10px]">{data.personalInfo.title}</p></div>
       <div className="text-right text-[9px] text-red-200"><p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p>{data.personalInfo.location}</p></div>
     </div>
-    {data.personalInfo.summary && <p className="text-gray-600 mb-3 text-[10px]">{data.personalInfo.summary}</p>}
+    {data.personalInfo.summary && <SummaryText text={data.personalInfo.summary} className="text-gray-600 mb-3 text-[10px]" />}
     <div className="grid grid-cols-[1fr_180px] gap-4">
       <div>
         <h2 className="text-[10px] font-bold uppercase text-red-800 mb-2 border-b border-red-200 pb-1">Experience</h2>
