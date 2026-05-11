@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Trash2 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { SortableItem } from "@/components/SortableItem";
 
@@ -79,7 +79,11 @@ const ResumeForm = () => {
     setData(prev => ({ ...prev, certifications: (prev.certifications || []).filter(c => c.id !== id) }));
   };
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const reorder = <T extends { id: string }>(list: T[], activeId: string, overId: string) => {
     const oldIndex = list.findIndex(i => i.id === activeId);
@@ -135,8 +139,8 @@ const ResumeForm = () => {
                 {data.experience.map(exp => (
                   <SortableItem key={exp.id} id={exp.id}>
                     <Card className="relative">
-                      <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-destructive" onClick={() => removeExperience(exp.id)}><Trash2 className="h-3 w-3" /></Button>
-                      <CardContent className="pt-4 pl-9 space-y-2">
+                      <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-8 w-8 z-10 text-destructive" onClick={() => removeExperience(exp.id)}><Trash2 className="h-4 w-4" /></Button>
+                      <CardContent className="pt-4 pl-12 pr-10 space-y-2">
                         <div className="grid grid-cols-2 gap-2">
                           <div><Label className="text-xs">Company</Label><Input value={exp.company} onChange={e => updateExperience(exp.id, "company", e.target.value)} /></div>
                           <div><Label className="text-xs">Position</Label><Input value={exp.position} onChange={e => updateExperience(exp.id, "position", e.target.value)} /></div>
@@ -168,8 +172,8 @@ const ResumeForm = () => {
                 {data.education.map(edu => (
                   <SortableItem key={edu.id} id={edu.id}>
                     <Card className="relative">
-                      <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-destructive" onClick={() => removeEducation(edu.id)}><Trash2 className="h-3 w-3" /></Button>
-                      <CardContent className="pt-4 pl-9 space-y-2">
+                      <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-8 w-8 z-10 text-destructive" onClick={() => removeEducation(edu.id)}><Trash2 className="h-4 w-4" /></Button>
+                      <CardContent className="pt-4 pl-12 pr-10 space-y-2">
                         <div className="grid grid-cols-2 gap-2">
                           <div><Label className="text-xs">Institution</Label><Input value={edu.institution} onChange={e => updateEducation(edu.id, "institution", e.target.value)} /></div>
                           <div><Label className="text-xs">Degree</Label><Input value={edu.degree} onChange={e => updateEducation(edu.id, "degree", e.target.value)} /></div>
@@ -207,8 +211,8 @@ const ResumeForm = () => {
                 {(data.certifications || []).map(cert => (
                   <SortableItem key={cert.id} id={cert.id}>
                     <Card className="relative">
-                      <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-destructive" onClick={() => removeCertification(cert.id)}><Trash2 className="h-3 w-3" /></Button>
-                      <CardContent className="pt-4 pl-9 space-y-2">
+                      <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-8 w-8 z-10 text-destructive" onClick={() => removeCertification(cert.id)}><Trash2 className="h-4 w-4" /></Button>
+                      <CardContent className="pt-4 pl-12 pr-10 space-y-2">
                         <div><Label className="text-xs">Certification Name</Label><Input value={cert.name} onChange={e => updateCertification(cert.id, "name", e.target.value)} /></div>
                         <div className="grid grid-cols-2 gap-2">
                           <div><Label className="text-xs">Issuer</Label><Input value={cert.issuer} onChange={e => updateCertification(cert.id, "issuer", e.target.value)} /></div>

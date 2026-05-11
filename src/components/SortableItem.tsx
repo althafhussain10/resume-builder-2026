@@ -8,6 +8,7 @@ export const SortableItem = ({ id, children }: { id: string; children: React.Rea
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : "auto" as const,
   };
   return (
     <div ref={setNodeRef} style={style} className="relative">
@@ -15,10 +16,11 @@ export const SortableItem = ({ id, children }: { id: string; children: React.Rea
         type="button"
         {...attributes}
         {...listeners}
-        className="absolute top-2 left-2 z-10 h-6 w-6 flex items-center justify-center text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing"
+        style={{ touchAction: "none" }}
+        className="absolute top-1 left-1 z-20 h-9 w-9 sm:h-7 sm:w-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted cursor-grab active:cursor-grabbing"
         aria-label="Drag to reorder"
       >
-        <GripVertical className="h-4 w-4" />
+        <GripVertical className="h-5 w-5 sm:h-4 sm:w-4" />
       </button>
       {children}
     </div>
